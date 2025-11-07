@@ -1,0 +1,13 @@
+/* styles.css */
+#map {
+  z-index: 0;
+}
+
+#info {
+  z-index: 1000;
+  transition: all 0.2s ease-in-out;
+}
+
+#info:hover {
+  transform: scale(1.03);
+}
