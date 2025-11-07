@@ -52,9 +52,16 @@ function createLink(p1, p2) {
   const elevDiff = (p2.elevation || 0) - (p1.elevation || 0);
   const dist3D = Math.sqrt(dist2D ** 2 + elevDiff ** 2);
 
+  // // Create invisible thicker line for easier clicking
+  // const invisibleLine = L.polyline([[p1.lat, p1.lng], [p2.lat, p2.lng]], {
+  //   color: "transparent",
+  //   weight: 20, // Much thicker for easier clicking
+  //   opacity: 0
+  // }).addTo(map);
+
   const line = L.polyline([[p1.lat, p1.lng], [p2.lat, p2.lng]], {
     color: "#38bdf8",
-    weight: 3
+    weight: 10
   }).addTo(map);
 
   const link = {
