@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fresnel Zone Visualization (Fixed)</title>
+  <style>
+    body { background: #111; color: #fff; text-align: center; font-family: sans-serif; }
+    canvas { background: #222; margin-top: 20px; border-radius: 8px; }
+    .controls { margin-top: 10px; }
+    .controls label { margin: 0 15px; }
+  </style>
+</head>
+<body>
+  <h2>First Fresnel Zone (Cross Section)</h2>
+  <div class="controls">
+    <label>
+      Frequency (GHz): <input type="number" id="freqInput" value="5" step="0.1" style="width: 60px;">
+    </label>
+    <label>
+      Distance (km): <input type="number" id="distInput" value="1" step="0.1" style="width: 60px;">
+    </label>
+  </div>
+  <canvas id="fresnelCanvas" width="800" height="400"></canvas>
+  <p id="results"></p>
+
+  <script>
+    // --- CONFIGURATION (Now driven by inputs) ---
+    const c = 3e8;             // speed of light (m/s)
+    const steps = 300;         // number of sampling points
+    const MAX_VISIBLE_RADIUS = 20; // Meters: Max radius to show on the canvas
+                                 // If calculated R > 20m, the ellipse will exceed canvas.
+
+    const canvas = document.getElementById("fresnelCanvas");
+    const ctx = canvas.getContext("2d");
+    const w = canvas.width, h = canvas.height;
+    const resultsDisplay = document.getElementById("results");
+
+    // --- SCALING FIX ---
+    // We use fixed scales based on the canvas size and MAX_VISIBLE_RADIUS/D (in meters)
+    const xScale = w / (2000); // Set horizontal scale: 2000 canvas pixels covers 2000m (2km)
+    const yScale = h / (2 * MAX_VISIBLE_RADIUS); // Set vertical scale: canvas height covers 40m (20m up, 20m down)
+    const offsetX = 100; // Padding for the left edge
+    const centerY = h / 2; // Vertical center line for the path
+
+    function drawFresnelZone() {
+        // 1. Get current values from the (new) inputs
+        const f_GHz = parseFloat(document.getElementById('freqInput').value) || 5;
+        const D_km = parseFloat(document.getElementById('distInput').value) || 1;
+
+        // Convert to base units
+        const f = f_GHz * 1e9;       // frequency (Hz)
+        const D = D_km * 1000;       // distance (m)
+        const lambda = c / f;       // wavelength (m)
+
+        // Reset canvas
+        ctx.clearRect(0, 0, w, h);
+        ctx.save();
+        ctx.translate(offsetX, 0); // Apply left padding
+
+        // 2. Compute Fresnel radii
+        const points = [];
+        for (let i = 0; i <= steps; i++) {
+            const d1 = (D / steps) * i;
+            const d2 = D - d1;
+            // Fresnel Radius Formula (n=1)
+            const r = Math.sqrt((lambda * d1 * d2) / (d1 + d2));
+            points.push({ x: d1, r });
+        }
+
+        const maxR = Math.max(...points.map(p => p.r));
+
+        // 3. Draw the Line of Sight (LOS)
+        ctx.beginPath();
+        ctx.strokeStyle = "#ffffff";
+        ctx.lineWidth = 1;
+        ctx.moveTo(0, centerY);
+        ctx.lineTo(D * xScale, centerY);
+        ctx.stroke();
+        ctx.closePath();
+
+        // 4. Draw the Fresnel Zone Ellipse
+        ctx.strokeStyle = "#00ff88";
+        ctx.lineWidth = 2;
+        ctx.fillStyle = "rgba(0, 255, 136, 0.1)"; // Fill for better visibility
+
+        ctx.beginPath();
+        // Top half
+        points.forEach((p, i) => {
+            const x = p.x * xScale;
+            const y = centerY - (p.r * yScale); // y is subtracted from center
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+        });
+        // Bottom half
+        for (let i = points.length - 1; i >= 0; i--) {
+            const p = points[i];
+            const x = p.x * xScale;
+            const y = centerY + (p.r * yScale); // y is added to center
+            ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+        ctx.stroke();
+        ctx.fill();
+
+        // 5. Labels and Results
+        ctx.fillStyle = "#fff";
+        ctx.font = "14px sans-serif";
+        ctx.fillText("Tx", -20, centerY + 5);
+        ctx.fillText("Rx", D * xScale + 10, centerY + 5);
+
+        resultsDisplay.innerHTML = `
+          **Wavelength ($\lambda$):** ${lambda.toFixed(4)} m &nbsp; | &nbsp;
+          **Max Radius ($R_{max}$):** ${maxR.toFixed(2)} m
+        `;
+
+        ctx.restore();
+    }
+
+    // 6. Event Listeners for Interaction
+    const inputs = document.querySelectorAll('.controls input');
+    inputs.forEach(input => input.addEventListener('input', drawFresnelZone));
+
+    // Initial draw
+    drawFresnelZone();
+
+  </script>
+</body>
+</html>
