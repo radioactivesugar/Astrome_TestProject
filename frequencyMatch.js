@@ -27,6 +27,10 @@ function updateFrequencyFromInput(id) {
   }
 }
 
+function returnFrequency(p) {
+  return window.towerFrequencies[p]
+}
+
 
 function updateFrequencyLabel(id) {
   const label = document.getElementById(`freq-label-${id}`);
@@ -34,6 +38,10 @@ function updateFrequencyLabel(id) {
     const val = window.towerFrequencies[id].toFixed(1);
     label.textContent = `${val}GHz`;
   }
+
+  const index = markerData.findIndex((p) => p.id === id);
+    const point = markerData[index];
+  removeLinksWithPoint(point);
 }
 
 function frequenciesMatch(p1, p2) {

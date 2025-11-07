@@ -57,6 +57,13 @@ body, html {
   transform: scale(1.03);
 }
 
+.leaflet-interactive{
+  stroke-opacity: "0.4";
+}
+.leaflet-interactive :hover{
+  stroke-opacity: "0.9";
+}
+
 .custom-marker {
   transition: transform 0.2s ease-in-out;
 }

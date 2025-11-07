@@ -1,146 +1,167 @@
-// fresnelzone.js
-console.log("Fresnel Zone script loaded.");
+// --- 1. Geodesic Constants (Earth's radius in meters) ---
+const R = 6371000; // Earth's mean radius in meters
+var currentFresnel;
+// --- 2. Helper Functions (Custom Implementation) ---
 
-const FRESNEL_MODAL_ID = "fresnel-zone-modal";
-
-/**
- * Creates and shows a modal with the Fresnel Zone visualization.
- * @param {number} f_GHz - The frequency in Gigahertz.
- * @param {number} D_km - The distance in kilometers.
- */
-function showFresnelZoneModal(f_GHz, D_km) {
-  let modal = document.getElementById(FRESNEL_MODAL_ID);
-  if (!modal) {
-    // Create the modal HTML if it doesn't exist
-    modal = document.createElement('div');
-    modal.id = FRESNEL_MODAL_ID;
-    modal.innerHTML = `
-      <div class="fresnel-backdrop" onclick="closeFresnelZoneModal()"></div>
-      <div class="fresnel-content">
-        <button class="fresnel-close" onclick="closeFresnelZoneModal()">×</button>
-        <h3>📡 First Fresnel Zone Cross-Section</h3>
-        <div class="fresnel-info">
-          <p id="fresnel-params"></p>
-          <p id="fresnel-results"></p>
-        </div>
-        <canvas id="fresnelCanvas" width="800" height="400"></canvas>
-        <p class="fresnel-note">Visualization is a cross-section of the first Fresnel zone. Vertical scale is exaggerated.</p>
-      </div>
-    `;
-    document.body.appendChild(modal);
-  }
-
-  // Update parameters and draw
-  document.getElementById("fresnel-params").innerHTML =
-    `Frequency: <b>${f_GHz.toFixed(1)} GHz</b> | Distance: <b>${D_km.toFixed(2)} km</b>`;
-
-  // Show the modal
-  modal.style.display = 'flex';
-
-  // Wait for the modal to be visible and canvas to be in the DOM before drawing
-  setTimeout(() => drawFresnelZone(f_GHz, D_km), 50);
+// Converts degrees to radians
+function toRad(degrees) {
+    return degrees * (Math.PI / 180);
 }
 
-function closeFresnelZoneModal() {
-  const modal = document.getElementById(FRESNEL_MODAL_ID);
-  if (modal) {
-    modal.style.display = 'none';
-  }
+// Converts radians to degrees
+function toDeg(radians) {
+    return radians * (180 / Math.PI);
 }
 
+// Calculates the initial bearing (azimuth) from point 1 to point 2
+function getBearing(lat1, lon1, lat2, lon2) {
+    const phi1 = toRad(lat1);
+    const lambda1 = toRad(lon1);
+    const phi2 = toRad(lat2);
+    const lambda2 = toRad(lon2);
 
-// --- Core Fresnel Zone Drawing Logic (Adapted from your HTML) ---
+    const y = Math.sin(lambda2 - lambda1) * Math.cos(phi2);
+    const x = Math.cos(phi1) * Math.sin(phi2) -
+              Math.sin(phi1) * Math.cos(phi2) * Math.cos(lambda2 - lambda1);
 
-function drawFresnelZone(f_GHz, D_km) {
-  const c = 3e8;              // speed of light (m/s)
-  const steps = 300;          // number of sampling points
-  const MAX_VISIBLE_RADIUS = 20; // Meters: Max radius to show on the canvas
+    const bearingRad = Math.atan2(y, x);
+    // Convert back to degrees and normalize to 0-360
+    return (toDeg(bearingRad) + 360) % 360;
+}
 
-  const canvas = document.getElementById("fresnelCanvas");
-  if (!canvas) return;
-  const ctx = canvas.getContext("2d");
-  const w = canvas.width, h = canvas.height;
-  const resultsDisplay = document.getElementById("fresnel-results");
+// Calculates a destination LatLng given a start, distance (m), and bearing (deg)
+function offsetLatLng(lat, lon, distance_m, bearing_deg) {
+    const phi1 = toRad(lat);
+    const lambda1 = toRad(lon);
+    const bearingRad = toRad(bearing_deg);
 
-  // Conversions
-  const f = f_GHz * 1e9;      // frequency (Hz)
-  const D = D_km * 1000;      // distance (m)
-  const lambda = c / f;       // wavelength (m)
+    // Angular distance in radians
+    const angularDist = distance_m / R;
 
-  // SCALING
-  // Horizontal scale: 800 canvas pixels covers D meters (distance)
-  const xScale = w / D;
-  // Vertical scale: 400 canvas pixels covers 2 * MAX_VISIBLE_RADIUS meters
-  const yScale = h / (2 * MAX_VISIBLE_RADIUS);
-  const offsetX = 0; // No padding needed inside the canvas
-  const centerY = h / 2; // Vertical center line for the path
+    // Calculate new latitude
+    const newLatRad = Math.asin(
+        Math.sin(phi1) * Math.cos(angularDist) +
+        Math.cos(phi1) * Math.sin(angularDist) * Math.cos(bearingRad)
+    );
 
-  // Reset canvas
-  ctx.clearRect(0, 0, w, h);
-  ctx.save();
-  ctx.translate(offsetX, 0);
+    // Calculate new longitude
+    const newLonRad = lambda1 + Math.atan2(
+        Math.sin(bearingRad) * Math.sin(angularDist) * Math.cos(phi1),
+        Math.cos(angularDist) - Math.sin(phi1) * Math.sin(newLatRad)
+    );
 
-  // 1. Compute Fresnel radii
-  const points = [];
-  for (let i = 0; i <= steps; i++) {
-    const d1 = (D / steps) * i;
-    const d2 = D - d1;
-    // Fresnel Radius Formula (n=1): R = sqrt((n * lambda * d1 * d2) / (d1 + d2))
-    const r = Math.sqrt((lambda * d1 * d2) / D); // d1 + d2 is just D
-    points.push({ x: d1, r });
-  }
+    return {
+        lat: toDeg(newLatRad),
+        lng: toDeg(newLonRad)
+    };
+}
 
-  const maxR = Math.max(...points.map(p => p.r));
+// Simple linear interpolation to find the Lat/Lng at distance d1 along the link
+// (This is fine since d1 is the distance along the line string itself)
+function getPointAlongLine(lat1, lon1, lat2, lon2, d1_m, D_m) {
+    const t = d1_m / D_m;
+    const lat = lat1 + t * (lat2 - lat1);
+    const lon = lon1 + t * (lon2 - lon1);
+    return {lat, lon};
+}
 
-  // 2. Draw the Line of Sight (LOS)
-  ctx.beginPath();
-  ctx.strokeStyle = "#ffffff";
-  ctx.lineWidth = 1;
-  ctx.moveTo(0, centerY);
-  ctx.lineTo(D * xScale, centerY);
-  ctx.stroke();
-  ctx.closePath();
+function removeFresnel()
+{
+  if(currentFresnel != null)
+    currentFresnel.remove();
+}
 
-  // 3. Draw the Fresnel Zone Ellipse
-  ctx.strokeStyle = "#00ff88";
-  ctx.lineWidth = 2;
-  ctx.fillStyle = "rgba(0, 255, 136, 0.1)";
+// --- 3. The Main Calculation Function ---
 
-  ctx.beginPath();
-  // Top half
-  points.forEach((p, i) => {
-    const x = p.x * xScale;
-    // Clamp the radius to MAX_VISIBLE_RADIUS for display purposes
-    const r_scaled = Math.min(p.r, MAX_VISIBLE_RADIUS) * yScale;
-    const y = centerY - r_scaled;
-    if (i === 0) ctx.moveTo(x, y);
-    else ctx.lineTo(x, y);
-  });
-  // Bottom half
-  for (let i = points.length - 1; i >= 0; i--) {
-    const p = points[i];
-    const x = p.x * xScale;
-    const r_scaled = Math.min(p.r, MAX_VISIBLE_RADIUS) * yScale;
-    const y = centerY + r_scaled;
-    ctx.lineTo(x, y);
-  }
-  ctx.closePath();
-  ctx.stroke();
-  ctx.fill();
+function calculateScale(freq){
+    // ... (Your original code for constants and Fresnel points) ...
+    console.log(currentLink);
+    const lat1 = currentLink.start.lat;
+    const lon1 = currentLink.start.lng;
+    const lat2 = currentLink.end.lat;
+    const lon2 = currentLink.end.lng;
 
-  // 4. Labels and Results
-  ctx.fillStyle = "#fff";
-  ctx.font = "14px sans-serif";
-  ctx.fillText("Tx", -20 + offsetX, centerY + 5);
-  ctx.fillText("Rx", D * xScale + 10 + offsetX, centerY + 5);
+    const currentFrequency = freq; // Assuming a value if not defined globally
 
-  const R_at_max_display = points.find(p => p.r === maxR).x / 1000;
+    // 1. Get current values from the (new) inputs
+    const f_GHz = currentFrequency;
+    const D_km = currentLink.distance;
+    const c = 3e8;                    // speed of light (m/s)
+    const steps = 300;                // number of sampling points
 
-  // Results in the HTML
-  resultsDisplay.innerHTML = `
-    **Wavelength ($\lambda$):** ${lambda.toFixed(4)} m &nbsp; | &nbsp;
-    **Max Radius ($R_{max}$):** ${maxR.toFixed(2)} m (at ${R_at_max_display.toFixed(2)} km)
-  `;
+    // Convert to base units
+    const f = f_GHz * 1e9;            // frequency (Hz)
+    const D = D_km * 1000;            // distance (m)
+    const lambda = c / f;             // wavelength (m)
 
-  ctx.restore();
+    // 2. Compute Fresnel radii
+    const points = [];
+    for (let i = 0; i <= steps; i++) {
+        const d1 = (D / steps) * i;
+        const d2 = D - d1;
+        // Fresnel Radius Formula (n=1)
+        // Add a check to prevent division by zero at the exact start/end points if d1 or d2 is 0
+        const r = (d1 + d2 === 0) ? 0 : Math.sqrt((lambda * d1 * d2) / (d1 + d2));
+        points.push({ d1, r });
+    }
+
+    // ----------------------------------------------------
+    // START OF POLYGON GENERATION LOGIC
+    // ----------------------------------------------------
+
+    const leftBoundaryPoints = [];
+    const rightBoundaryPoints = [];
+
+    // Calculate the initial bearing (direction) of the link
+    const forwardBearing = getBearing(lat1, lon1, lat2, lon2);
+    const leftBearing = (forwardBearing - 90 + 360) % 360; // Perpendicular left
+    const rightBearing = (forwardBearing + 90) % 360;    // Perpendicular right
+
+    // Iterate through the calculated Fresnel radii
+    for (const point of points) {
+        const d1 = point.d1; // distance from start (m)
+        const r = point.r;   // Fresnel radius (m)
+
+        // 3. Find the Lat/Lng point along the straight link at this distance
+        const midPoint = getPointAlongLine(lat1, lon1, lat2, lon2, d1, D);
+
+        // 4. Calculate the Lat/Lng offset by radius 'r' to the left and right
+
+        // Offset to the Left
+        const leftPoint = offsetLatLng(midPoint.lat, midPoint.lon, r, leftBearing);
+        leftBoundaryPoints.push([leftPoint.lat, leftPoint.lng]);
+
+        // Offset to the Right
+        const rightPoint = offsetLatLng(midPoint.lat, midPoint.lon, r, rightBearing);
+        rightBoundaryPoints.push([rightPoint.lat, rightPoint.lng]);
+    }
+
+    // 5. Assemble the final polygon path
+    const finalPolygonPath = [
+        ...leftBoundaryPoints,
+        // Reverse the right points list to close the loop cleanly
+        ...rightBoundaryPoints.reverse()
+    ];
+
+    // 6. Draw the polygon on the map
+    currentFresnel = L.polygon(finalPolygonPath, {
+        color: 'blue',
+        fillColor: 'blue',
+        fillOpacity: 0.15,
+        weight: 1
+    }).addTo(map);
+
+    console.log(currentFresnel);
+
+
+    // ----------------------------------------------------
+    // END OF POLYGON GENERATION LOGIC
+    // ----------------------------------------------------
+
+    // ... (rest of your original code, adjusted for the polygon's bounds) ...
+
+    // Example: fit the map view to the newly drawn polygon's bounds
+    map.fitBounds(L.latLngBounds(finalPolygonPath));
+
+    console.log(`Start Lat: ${lat1}, End Lon: ${lon1}, Dist: ${currentLink.distance}`);
 }

@@ -4,6 +4,11 @@ window.links = [];
 window.connectMode = false;
 window.linkStartPoint = null;
 
+
+//Declaring Current Values for calculations
+var currentLink;
+var currentFrequency;
+
 function startConnection(id) {
   const startPoint = markerData.find(p => p.id === id);
   if (!startPoint) return;
@@ -65,12 +70,14 @@ function createLink(p1, p2) {
   }).addTo(map);
 
   const link = {
-    id: Date.now(),
+    id: Date.now("0000"),
     start: p1,
     end: p2,
     line,
     distance: dist3D
   };
+
+
   window.links.push(link);
 
   const popupHtml = `
@@ -93,9 +100,14 @@ function createLink(p1, p2) {
       return;
     }
 
+
     // Otherwise open this line's popup
     line.openPopup();
     currentPopup = line.getPopup();
+    currentLink = link;
+    calculateScale(returnFrequency(p1.id));
+
+
   });
 }
 

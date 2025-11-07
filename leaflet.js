@@ -5,6 +5,8 @@ var map = L.map("map").setView([13, 78], 50);
 
 let currentPopup = null;
 
+var latX, latY, latX1, latY1;
+
 L.tileLayer(
   "https://api.maptiler.com/maps/aquarelle/256/{z}/{x}/{y}.png?key=zR9N2yQDN0DnrkpxaLNG",
   {
@@ -43,6 +45,8 @@ function createFrequencyLabel(id, lat, lng, freq = 52.9) {
 
 // Click on map → add marker
 map.on("click", async function (e) {
+
+    removeFresnel();
   // 1️⃣ Close popup if open
   if (currentPopup) {
     map.closePopup(currentPopup);
