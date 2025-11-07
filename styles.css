@@ -1,13 +1,99 @@
 /* styles.css */
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+#map-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
 #map {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
   z-index: 0;
 }
 
+#map-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: black;
+  opacity: 0;
+  z-index: 100; /* Below markers and lines */
+  pointer-events: none; /* ALWAYS allow clicks through */
+  transition: opacity 0.3s ease-in-out;
+}
+
+#map-overlay.active {
+  opacity: 0.3;
+  /* pointer-events stays none - purely visual */
+}
+
 #info {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  background: black;
+  color: white;
+  padding: 8px;
+  border-radius: 4px;
+  opacity: 0.8;
   z-index: 1000;
   transition: all 0.2s ease-in-out;
 }
 
 #info:hover {
   transform: scale(1.03);
+}
+
+.custom-marker {
+  transition: transform 0.2s ease-in-out;
+}
+
+.custom-marker:hover {
+  transform: scale(1.3);
+}
+
+.marker-hit-area {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+/* Ensure polylines are above the overlay */
+.leaflet-pane.leaflet-overlay-pane {
+  z-index: 400;
+}
+/* ... previous styles ... */
+
+/* Ensure polylines are above the overlay */
+.leaflet-pane.leaflet-overlay-pane {
+  z-index: 400;
+}
+
+/* Add padding to popup so it hovers above the icon */
+.leaflet-popup-content-wrapper {
+  margin-bottom: 0px;
+}
+
+/* Alternatively, if you want more control: */
+.leaflet-popup {
+  margin-bottom: 45px;
+}
+.leaflet-tooltip {
+  margin-bottom: 65px;
 }
