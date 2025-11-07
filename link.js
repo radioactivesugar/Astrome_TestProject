@@ -93,14 +93,22 @@ function createLink(p1, p2) {
 
   // Add click handler similar to markers
   line.on("click", function() {
+
+
     // If there's already a popup open, close it first and do nothing
     if (currentPopup) {
       map.closePopup(currentPopup);
+            // 
+            // removeFresnel();
+            // calculateScale(returnFrequency(p1.id));
       currentPopup = null;
-      return;
+
+
+      console.log('this now');
+
     }
-
-
+    console.log('happening now');
+    removeFresnel();
     // Otherwise open this line's popup
     line.openPopup();
     currentPopup = line.getPopup();

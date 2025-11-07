@@ -134,13 +134,16 @@ function showPointPopup(point) {
       <div>
         <b>Frequency:</b>
         <div class="flex items-center space-x-2 mt-1">
-          <button onclick="changeFrequency(${point.id}, -0.1)" class="bg-gray-700 text-white px-2 rounded">-</button>
+          
+
           <input id="freq-input-${point.id}" type="number" value="${freq.toFixed(1)}"
-                 step="0.1" min="0" class="border rounded w-20 text-center"
-                 oninput="updateFrequencyFromInput(${point.id})"/>
-          <button onclick="changeFrequency(${point.id}, 0.1)" class="bg-gray-700 text-white px-2 rounded">+</button>
-          <span>GHz</span>
-        </div>
+                   step="0.1" min="0" class="border rounded w-5 text-center"
+                   oninput="updateFrequencyFromInput(${point.id})"/><span>GHz</span>
+
+
+
+
+      </div>
       </div>
 
       <div class="flex gap-2 mt-3">
