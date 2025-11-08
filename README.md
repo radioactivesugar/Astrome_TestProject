@@ -1,8 +1,8 @@
-**Fresnel Zone Visualiser**
+## Fresnel Zone Visualiser
 
 An interactive web-based tool for engineers to visualize and plan network links with real-time Fresnel zone calculations.
 
-## ✨ Features
+##  Features
 
 - **Interactive Map Interface** - Click to place telecom towers on a Leaflet map
 - **Real-time Elevation Data** - Automatic elevation fetching for accurate link planning
@@ -12,25 +12,25 @@ An interactive web-based tool for engineers to visualize and plan network links 
 - **Link Analytics** - View distance, elevation difference, and clearance data
 - **Responsive Design** - Clean, intuitive UI with hover effects and tooltips
 
-## 🎯 What are Fresnel Zones?
+## What are Fresnel Zones?
 
 Fresnel zones are ellipsoidal regions of space around the direct line-of-sight path between transmitter and receiver. For optimal microwave propagation, the first Fresnel zone should remain clear of obstacles. This tool calculates and visualizes these zones based on:
 - Distance between towers
 - Operating frequency
 - Geographic coordinates
 
-## 🚀 Demo
+## Demo
 
 [[Live Demo]](https://astrome-test-project-9wm9.vercel.app/)
 
-## 🛠️ Technologies Used
+## Technologies Used
 
 - **Leaflet.js** - Interactive mapping
 - **MapTiler** - Beautiful map tiles
 - **Vanilla JavaScript** - Core functionality
 - **CSS3** - Modern styling with animations
 
-## 📦 Installation
+## Installation
 
 1. Clone the repository:
 ```bash
@@ -50,7 +50,7 @@ npx serve
 L.tileLayer("https://api.maptiler.com/maps/aquarelle/256/{z}/{x}/{y}.png?key=YOUR_KEY_HERE"
 ```
 
-## 📖 Usage
+## Usage
 
 1. **Add Towers**: Click anywhere on the map to place a telecom tower
 2. **Set Frequency**: Adjust the frequency (GHz) for each tower using the +/- buttons
@@ -60,7 +60,7 @@ L.tileLayer("https://api.maptiler.com/maps/aquarelle/256/{z}/{x}/{y}.png?key=YOU
 6. **Modify**: Delete towers or links as needed
 
 
-## 🧮 Technical Details
+## Technical Details
 
 The Fresnel zone radius is calculated using:
 
@@ -75,23 +75,24 @@ Where:
 - `d₂` = Distance from point to receiver
 - `D` = Total link distance
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
-## 📝 License
+## License
 
 MIT License - feel free to use this project for your own applications.
 
-## 👨‍💻 Author
+## Author
 
 Built with ☕ by [Your Name]
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - MapTiler for beautiful map tiles
 - Leaflet.js for the mapping library
 - The telecommunications community for Fresnel zone theory
+- Astrome for giving me this as an assignment
 
 ---
 
