@@ -175,10 +175,10 @@ function createLink(p1, p2) {
 
     line.openPopup();
     currentPopup = line.getPopup();
-    if (link.start.lng > link.end.lng)
-      currentPopup.setLatLng([link.start.lat  ,link.start.lng+ 0.004]);
+    if (link.start.lat > link.end.lat)
+      currentPopup.setLatLng([link.start.lat + 0.002 ,link.start.lng]);
       else
-      currentPopup.setLatLng([link.end.lat  ,link.end.lng+ 0.004]);
+      currentPopup.setLatLng([link.end.lat + 0.002 ,link.end.lng]);
     currentLink = link;
     calculateScale(returnFrequency(p1.id));
 
