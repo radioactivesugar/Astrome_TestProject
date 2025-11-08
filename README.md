@@ -1,6 +1,6 @@
-# 📡 Fresnel Zone Link Planner
+Fresnel Zone Visualiser
 
-An interactive web-based tool for telecommunications engineers to visualize and plan microwave radio links with real-time Fresnel zone calculations.
+An interactive web-based tool for engineers to visualize and plan network links with real-time Fresnel zone calculations.
 
 ## ✨ Features
 
