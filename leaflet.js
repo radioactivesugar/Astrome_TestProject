@@ -153,7 +153,7 @@ function showPointPopup(point) {
 
   <!-- Frequency Section -->
   <div class="frequency-section">
-    <div class="frequency-label">frequency</div>
+    <div style = "margin-bottom: 5px;">frequency</div>
     <div class="frequency-input-group">
       <input id="freq-input-${point.id}"
              type="number"
