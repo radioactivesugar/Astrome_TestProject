@@ -66,6 +66,7 @@ function createLink(p1, p2) {
 
   const line = L.polyline([[p1.lat, p1.lng], [p2.lat, p2.lng]], {
     color: "#38bdf8",
+    opacity: .35,
     weight: 10
   }).addTo(map);
 
@@ -98,7 +99,7 @@ function createLink(p1, p2) {
     // If there's already a popup open, close it first and do nothing
     if (currentPopup) {
       map.closePopup(currentPopup);
-            // 
+            //
             // removeFresnel();
             // calculateScale(returnFrequency(p1.id));
       currentPopup = null;

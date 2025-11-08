@@ -1,146 +1,212 @@
-/* General popup container */
-.leaflet-popup-content-wrapper {
-  background: #fff;
-  border-radius: 14px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-  padding: 0;
-  border: none;
-  font-family: "Inter", sans-serif;
-  width: 240px;
-}
+/* Modern Tower Card Styling - Clean Version */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap');
 
-/* Remove the triangle tail */
-.leaflet-popup-tip {
-  display: none;
-}
-
-/* Inner content box */
-.leaflet-popup-content {
+/* Remove default number input arrows */
+.frequency-input::-webkit-outer-spin-button,
+.frequency-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
   margin: 0;
-  padding: 16px;
-  color: #111;
 }
 
-/* Title section */
-.popup-title {
+.frequency-input[type=number] {
+  -moz-appearance: textfield;
+  background: #F2F3F6;
+  border-radius: 2px; /* 4px * 0.6 = 2.4px (rounded to 2px) */
+  width: 29px; /* 48px * 0.6 = 28.8px (rounded to 29px) */
+}
+
+/* Main card container */
+.leaflet-popup-content-wrapper{
+  background: white;
+  border: 2px solid #5b6fd8; /* 3px * 0.6 = 1.8px (rounded to 2px) */
+  border-radius: 5px; /* 8px * 0.6 = 4.8px (rounded to 5px) */
+  padding: 0px; /* 10px * 0.6 = 6px */
+  width: 168px; /* 280px * 0.6 = 168px */
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1); /* Reduced shadow */
+  font-family: 'Open Sans', sans-serif;
+}
+.leaflet-popup-content
+{
+  margin: 10px 10px;
+}
+
+/* Header Section */
+.tower-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 10px; /* 16px * 0.6 = 9.6px (rounded to 10px) */
+}
+
+.tower-title {
+  font-size: 11px; /* 18px * 0.6 = 10.8px (rounded to 11px) */
   font-weight: 600;
-  font-size: 14px;
-  margin-bottom: 8px;
+  color: #000;
+  font-family: 'Open Sans', sans-serif;
 }
 
-.popup-title .tower-id {
-  background: #0d1b2a;
-  color: white;
-  padding: 4px 8px;
-  border-radius: 6px;
-  font-size: 11px;
-}
-
-.popup-title .status-dot {
-  width: 8px;
-  height: 8px;
-  background: #3bb54a;
-  border-radius: 50%;
-  margin-left: 6px;
-}
-
-/* Section labels */
-.popup-section-label {
-  font-size: 11px;
+.tower-id {
   color: #666;
-  text-transform: lowercase;
-  margin-bottom: 4px;
+  font-weight: 400;
 }
 
-/* Frequency section */
-.freq-box {
-  background: #f7f8fa;
-  border-radius: 8px;
-  padding: 8px;
+.close-btn {
+  background: #5b6fd8;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 17px; /* 28px * 0.6 = 16.8px (rounded to 17px) */
+  height: 17px; /* 28px * 0.6 = 16.8px (rounded to 17px) */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 11px; /* 18px * 0.6 = 10.8px (rounded to 11px) */
+  flex-shrink: 0;
+}
+
+.close-btn:hover {
+  background: #4a5dc7;
+}
+
+.leaflet-popup-close-button{
+  opacity: 0;
+}
+
+/* Frequency Section */
+.frequency-section {
+  margin-bottom: 10px; /* 16px * 0.6 = 9.6px (rounded to 10px) */
+}
+
+.frequency-label {
+  color: #000;
+  font-size: 11px; /* 18px * 0.6 = 10.8px (rounded to 11px) */
+  margin-bottom: 5px; /* 8px * 0.6 = 4.8px (rounded to 5px) */
+  display: block;
+  font-weight: 400;
+}
+
+.frequency-input-group {
+  -moz-appearance: textfield;
+  background: #F2F3F6;
+  border-radius: 2px; /* 4px * 0.6 = 2.4px (rounded to 2px) */
+  padding-left: 10px; /* 16px * 0.6 = 9.6px (rounded to 10px) */
+  display: flex;
+  align-items: center;
+  gap: 5px; /* 8px * 0.6 = 4.8px (rounded to 5px) */
+}
+
+.frequency-input {
+  font-size: 13px; /* 22px * 0.6 = 13.2px (rounded to 13px) */
+  font-weight: 600;
+  font-family: 'Open Sans', sans-serif;
+  border: none;
+  background: transparent;
+  padding: 0;
+  width: 48px; /* 80px * 0.6 = 48px */
+  color: #000;
+  outline: none;
+}
+
+.frequency-unit {
+  font-size: 10px; /* 16px * 0.6 = 9.6px (rounded to 10px) */
+  color: #000;
+  font-weight: 400;
+}
+
+.spinner-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-left: auto;
+}
+
+.spinner-btn {
+  background: #d8dce6;
+  border: none;
+  width: 19px; /* 32px * 0.6 = 19.2px (rounded to 19px) */
+  height: 13px; /* 22px * 0.6 = 13.2px (rounded to 13px) */
+  cursor: pointer;
+  font-size: 6px; /* 10px * 0.6 = 6px */
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner-btn:first-child {
+  border-radius: 2px 2px 0 0; /* 4px * 0.6 = 2.4px */
+  border-bottom: 1px solid #ccc;
+}
+
+.spinner-btn:last-child {
+  border-radius: 0 0 2px 2px; /* 4px * 0.6 = 2.4px */
+}
+
+.spinner-btn:hover {
+  background: #c8ccd6;
+}
+
+/* Data fields */
+.data-field {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 5px 0; /* 8px * 0.6 = 4.8px (rounded to 5px) */
+}
+
+.data-label {
+  color: #999;
+  font-size: 8px; /* 14px * 0.6 = 8.4px (rounded to 8px) */
+  font-weight: 400;
+}
+
+.data-value {
+  font-size: 10px; /* 16px * 0.6 = 9.6px (rounded to 10px) */
   font-weight: 600;
-  margin-bottom: 10px;
+  font-family: 'Open Sans', sans-serif;
+  color: #000;
 }
 
-.freq-box button {
-  background: #0d1b2a;
-  color: white;
-  border: none;
-  font-size: 14px;
-  border-radius: 6px;
-  width: 28px;
-  height: 28px;
-  cursor: pointer;
-}
-
-.freq-box input {
-  background: none;
-  border: none;
-  width: 60px;
-  text-align: center;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-/* Info fields */
-.info-box {
-  background: #f7f8fa;
-  padding: 8px;
-  border-radius: 8px;
-  text-align: center;
-  font-size: 13px;
-  font-weight: 500;
-  color: #333;
-  margin-bottom: 10px;
-}
-
-/* Lat/lon grid */
-.latlon-grid {
+/* Action buttons */
+.action-buttons {
   display: flex;
-  gap: 8px;
+  gap: 7px; /* 12px * 0.6 = 7.2px (rounded to 7px) */
+  margin-top: 10px; /* 16px * 0.6 = 9.6px (rounded to 10px) */
 }
 
-.latlon-grid div {
+.btn {
   flex: 1;
-  background: #f7f8fa;
-  padding: 6px;
-  border-radius: 8px;
-  text-align: center;
-  font-size: 13px;
-  color: #333;
-}
-
-/* Bottom buttons */
-.popup-actions {
-  display: flex;
-  gap: 8px;
-  margin-top: 10px;
-}
-
-.popup-actions button {
-  flex: 1;
+  padding: 4px; /* 12px * 0.6 = 7.2px (rounded to 7px) */
   border: none;
-  color: white;
-  font-size: 14px;
-  font-weight: 500;
-  border-radius: 8px;
-  padding: 10px;
+  border-radius: 12px; /* 24px * 0.6 = 14.4px (rounded to 14px) */
+  font-size: 12px; /* 20px * 0.6 = 12px */
   cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Open Sans', sans-serif;
 }
 
-.popup-actions .delete {
-  background: #d9534f;
+.btn-delete {
+  padding: 4px 12px;
+  background: #ffd4d4;
+  color: #000;
 }
 
-.popup-actions .connect {
-  background: #4CAF50;
+.btn-delete:hover {
+  background: #ffc4c4;
 }
 
-.popup-actions button:hover {
-  opacity: 0.9;
+.btn-add {
+  background: #d8dce6;
+  color: #000;
+  padding: 4px 24px;/* 100px * 0.6 = 60px */
+}
+
+.btn-add:hover {
+  background: #c8ccd6;
+}
+
+/* Remove info icons */
+.info-icon {
+  display: none;
 }

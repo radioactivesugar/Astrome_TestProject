@@ -1,14 +1,14 @@
 console.log("Leaflet script loaded.");
 
 // Map setup
-var map = L.map("map").setView([13, 78], 50);
+var map = L.map("map").setView([13.17, 77.62], 15);
 
 let currentPopup = null;
 
 var latX, latY, latX1, latY1;
 
 L.tileLayer(
-  "https://api.maptiler.com/maps/aquarelle/256/{z}/{x}/{y}.png?key=zR9N2yQDN0DnrkpxaLNG",
+  "https://api.maptiler.com/maps/streets-v4/256/{z}/{x}/{y}.png?key=zR9N2yQDN0DnrkpxaLNG",
   {
     attribution:
       '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> ' +
@@ -62,7 +62,12 @@ map.on("click", async function (e) {
 
   // 3️⃣ Add new marker
   const { lat, lng } = e.latlng;
-  const id = Date.now();
+  const uniqueCode = Date.now();
+  // Convert the number to a string and take the last 4 characters
+  const id = Number(Date.now().toString().slice(-4));
+
+  console.log(typeof id);
+  console.log(typeof uniqueCode);
 
   const marker = L.marker([lat, lng], { icon: towerIcon }).addTo(map);
 
@@ -73,9 +78,11 @@ map.on("click", async function (e) {
     elevation: null,
     marker
   };
-
+console.log(point.id);
   markerData.push(point);
   setInfo(`Added point ${markerData.length}`);
+
+  console.log(markerData.length);
 
   initializeFrequencyForMarker(marker, id);
 
@@ -123,40 +130,64 @@ function showPointPopup(point) {
   const freq = window.towerFrequencies[point.id];
 
   const popupHtml = `
-    <div class="text-sm font-medium space-y-2">
-      📶 <b>Telecom Tower #${point.id}</b><br>
-      Lat: ${point.lat.toFixed(4)}<br>
-      Lng: ${point.lng.toFixed(4)}<br>
-      Elevation: <b>${point.elevation} m</b><br>
+  <div class="tower-card">
+  <!-- Header Section -->
+  <div class="tower-header">
+    <div class="tower-title">
+      tower_1 <span class="tower-id">#${point.id}</span>
+    </div>
+    <button class="close-btn" onclick="deletePoint(${point.id})" title="Close">×</button>
+  </div>
 
-      <hr class="my-2 border-gray-400">
-
-      <div>
-        <b>Frequency:</b>
-        <div class="flex items-center space-x-2 mt-1">
-          
-
-          <input id="freq-input-${point.id}" type="number" value="${freq.toFixed(1)}"
-                   step="0.1" min="0" class="border rounded w-5 text-center"
-                   oninput="updateFrequencyFromInput(${point.id})"/><span>GHz</span>
-
-
-
-
-      </div>
-      </div>
-
-      <div class="flex gap-2 mt-3">
-        <button onclick="deletePoint(${point.id})"
-          class="bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1 rounded w-full">
-          Delete
-        </button>
-        <button onclick="startConnection(${point.id})"
-          class="bg-blue-500 hover:bg-blue-600 text-white text-xs px-3 py-1 rounded w-full">
-          Connect
-        </button>
+  <!-- Frequency Section -->
+  <div class="frequency-section">
+    <div class="frequency-label">frequency</div>
+    <div class="frequency-input-group">
+      <input id="freq-input-${point.id}"
+             type="number"
+             value="${freq.toFixed(1)}"
+             step="0.1"
+             min="0"
+             class="frequency-input"
+             oninput="updateFrequencyFromInput(${point.id})"/>
+      <span class="frequency-unit">GHz</span>
+      <div class="spinner-controls">
+        <button class="spinner-btn"
+                onclick="document.getElementById('freq-input-${point.id}').stepUp(); updateFrequencyFromInput(${point.id})">▲</button>
+        <button class="spinner-btn"
+                onclick="document.getElementById('freq-input-${point.id}').stepDown(); updateFrequencyFromInput(${point.id})">▼</button>
       </div>
     </div>
+  </div>
+
+  <!-- Elevation Field -->
+  <div class="data-field">
+    <span class="data-label">elevation</span>
+    <span class="data-value">${point.elevation}m</span>
+  </div>
+
+  <!-- Latitude Field -->
+  <div class="data-field">
+    <span class="data-label">latitude</span>
+    <span class="data-value">${point.lat.toFixed(3)}</span>
+  </div>
+
+  <!-- Longitude Field -->
+  <div class="data-field">
+    <span class="data-label">longitude</span>
+    <span class="data-value">${point.lng.toFixed(3)}</span>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="action-buttons">
+    <button onclick="deletePoint(${point.id});" class="btn btn-delete">
+      <img class = 'btn-delete-img' src='assets/trash.svg' style="width:10px;height:10px;">
+    </button>
+    <button onclick="startConnection(${point.id});" class="btn btn-add">
+      +
+    </button>
+  </div>
+</div>
   `;
 
   const popup = L.popup()
@@ -169,7 +200,10 @@ function showPointPopup(point) {
 
 // Delete marker
 function deletePoint(id) {
+
+
   const index = markerData.findIndex((p) => p.id === id);
+  console.log(id);
   if (index !== -1) {
     const point = markerData[index];
     map.closePopup();
