@@ -1,4 +1,4 @@
-Fresnel Zone Visualiser
+**Fresnel Zone Visualiser**
 
 An interactive web-based tool for engineers to visualize and plan network links with real-time Fresnel zone calculations.
 
