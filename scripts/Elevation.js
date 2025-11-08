@@ -10,5 +10,6 @@ async function fetchElevation(lat, lon) {
   } catch (err) {
     console.error("Error fetching elevation:", err);
     return "N/A";
+
   }
 }

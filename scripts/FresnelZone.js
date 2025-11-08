@@ -164,4 +164,5 @@ function calculateScale(freq){
     map.fitBounds(L.latLngBounds(finalPolygonPath));
 
     console.log(`Start Lat: ${lat1}, End Lon: ${lon1}, Dist: ${currentLink.distance}`);
+
 }

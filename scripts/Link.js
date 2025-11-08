@@ -208,5 +208,6 @@ function disableLinkInteractions() {
 function enableLinkInteractions() {
   window.links.forEach(l => {
     if (l.line.getElement()) l.line.getElement().style.pointerEvents = "auto";
+
   });
 }

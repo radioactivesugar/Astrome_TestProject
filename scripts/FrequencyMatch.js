@@ -103,4 +103,5 @@ window.createLink = function (p1, p2) {
         return;
     }
     originalCreateLink(p1, p2);
+
 };
