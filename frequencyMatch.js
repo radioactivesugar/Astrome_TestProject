@@ -84,6 +84,9 @@ function updateFrequencyLabel(id) {
     const index = markerData.findIndex((p) => p.id === id);
     const point = markerData[index];
     removeLinksWithPoint(point);
+    setInfo(`Frequency Changed.`,` All links to the tower have been removed.`, true);
+
+
 }
 
 function frequenciesMatch(p1, p2) {
@@ -96,8 +99,7 @@ function frequenciesMatch(p1, p2) {
 const originalCreateLink = window.createLink;
 window.createLink = function (p1, p2) {
     if (!frequenciesMatch(p1, p2)) {
-        setInfo("❌ Frequency mismatch! Towers cannot link.");
-        alert(`Cannot connect: Tower frequencies differ (${window.towerFrequencies[p1.id]} GHz vs ${window.towerFrequencies[p2.id]} GHz)`);
+        setInfo(`Frequency mismatch! Towers cannot link.`,` Tower frequencies do not match - (${window.towerFrequencies[p1.id]} GHz vs ${window.towerFrequencies[p2.id]} GHz)`, true);
         return;
     }
     originalCreateLink(p1, p2);

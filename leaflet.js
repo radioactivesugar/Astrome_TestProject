@@ -7,6 +7,8 @@ let currentPopup = null;
 
 var latX, latY, latX1, latY1;
 
+let towerCount = 0;
+
 L.tileLayer(
   "https://api.maptiler.com/maps/streets-v4/256/{z}/{x}/{y}.png?key=zR9N2yQDN0DnrkpxaLNG",
   {
@@ -32,8 +34,7 @@ function createFrequencyLabel(id, lat, lng, freq = 52.9) {
   const label = L.divIcon({
     className: "frequency-label",
     html: `<div id="freq-label-${id}"
-                style="background:white;border:1px solid #555;border-radius:4px;
-                       padding:2px 5px;font-size:11px;box-shadow:0 0 2px rgba(0,0,0,0.4);">
+                >
              ${freq.toFixed(1)} GHz
            </div>`,
     iconSize: [60, 20],
@@ -56,15 +57,17 @@ map.on("click", async function (e) {
 
   // 2️⃣ Cancel connection if active
   if (window.connectMode && window.linkStartPoint) {
-    cancelConnection();
+    cancelConnection(true);
     return;
   }
 
   // 3️⃣ Add new marker
   const { lat, lng } = e.latlng;
-  const uniqueCode = Date.now();
+  towerCount++;
   // Convert the number to a string and take the last 4 characters
   const id = Number(Date.now().toString().slice(-4));
+  const towerName = `tower_${towerCount.toString()}`;
+
 
   console.log(typeof id);
   console.log(typeof uniqueCode);
@@ -72,6 +75,7 @@ map.on("click", async function (e) {
   const marker = L.marker([lat, lng], { icon: towerIcon }).addTo(map);
 
   const point = {
+    towerName,
     id,
     lat,
     lng,
@@ -80,13 +84,21 @@ map.on("click", async function (e) {
   };
 console.log(point.id);
   markerData.push(point);
-  setInfo(`Added point ${markerData.length}`);
+  setInfo(`Added ${point.towerName}`, `Tap on the icon to see more info. You can click "+" to connect to other towers.`, false);
 
-  console.log(markerData.length);
+  //console.log(markerData.length);
 
   initializeFrequencyForMarker(marker, id);
 
-  marker.bindTooltip("Loading elevation...", { permanent: true, direction: "top" }).openTooltip();
+  // You MUST use HTML instead of a plain string to include the icon
+const iconTooltipContent = `
+    <div style="display: flex; align-items: center; white-space: nowrap;">
+        <span style = "font: Open Sans;">creating...</span>
+        <img src="assets/rss.svg" alt="Icon" style="width: 12px; height: 12px; margin-left: 15px;">
+    </div>
+`;
+
+marker.bindTooltip(iconTooltipContent, { permanent: true, direction: "top" }).openTooltip();
   const elevation = await fetchElevation(lat, lng);
   point.elevation = elevation;
   marker.unbindTooltip();
@@ -113,7 +125,7 @@ function showPointPopup(point) {
   if (window.connectMode && window.linkStartPoint) {
     if (point.id !== window.linkStartPoint.id) {
       createLink(window.linkStartPoint, point);
-      cancelConnection();
+      cancelConnection(false);
     }
     return;
   }
@@ -134,9 +146,9 @@ function showPointPopup(point) {
   <!-- Header Section -->
   <div class="tower-header">
     <div class="tower-title">
-      tower_1 <span class="tower-id">#${point.id}</span>
+      ${point.towerName} <span class="tower-id">#${point.id}</span>
     </div>
-    <button class="close-btn" onclick="deletePoint(${point.id})" title="Close">×</button>
+    <button class="close-btn" onclick="map.closePopup(currentPopup)" title="Close">×</button>
   </div>
 
   <!-- Frequency Section -->
@@ -210,7 +222,7 @@ function deletePoint(id) {
     map.removeLayer(point.marker);
     if (point.freqLabel) map.removeLayer(point.freqLabel);
     markerData.splice(index, 1);
-    setInfo(`Deleted point`);
+    setInfo(`Deleted point`, `The tower and all it's link have been destroyed`, true);
     removeLinksWithPoint(point);
   }
 }
@@ -225,6 +237,39 @@ function removeLinksWithPoint(point) {
   });
 }
 
-function setInfo(text) {
-  document.getElementById("info").innerText = text;
+/**
+ * Updates the info box with new content and styling.
+ * * @param {string} headerText The text for the header (e.g., "Frequencies do not match").
+ * @param {string} bodyText The detailed body text.
+ * @param {boolean} isError If true, applies the error style (red/info icon); otherwise, applies the success style (blue/sun icon).
+ */
+function setInfo(headerText, bodyText, isError) {
+
+    const infoBox = document.getElementById("info-box"); // Main container
+    const headerElement = document.getElementById("info-header");
+    const bodyElement = document.getElementById("info-body");
+    const iconElement = document.getElementById("info-icon");
+
+    // 1. Update Content
+    headerElement.innerText = headerText;
+    bodyElement.innerText = bodyText;
+    infoBox.classList.remove('faded');
+
+
+    // 2. Update Style (based on isError boolean)
+    if (isError) {
+        infoBox.className = "info-box error";
+        // Assuming your red 'i' icon is at this path
+        iconElement.src = "assets/icon-error-info.svg";
+        iconElement.alt = "Error Information Icon";
+    } else {
+        infoBox.className = "info-box success";
+        // Assuming your blue 'sun' icon is at this path
+        iconElement.src = "assets/icon-success-sun.svg";
+        iconElement.alt = "Success Sun Icon";
+    }
+    setTimeout(() => {
+        infoBox.classList.add('faded');
+    }, 20000); // 10 seconds delay
+
 }

@@ -101,6 +101,41 @@ body, html {
 .leaflet-popup {
   margin-bottom: 45px;
 }
+
+
+/* Tool Tip */
+/* 1. Target the Leaflet Content Pane to apply visual styles */
+/* This is the element that contains the text "Loading elevation..." */
+.leaflet-tooltip-pane .leaflet-tooltip-content {
+    /* Core Visual Styles */
+    background-color: white;   /* Rounding */
+    padding: 0 50px;        /* Padding */
+margin-bottom: px
+    /* Font style to match the bold look */
+    font-weight: bold;
+    color: #333;
+
+    /* Remove the default triangle arrow space */
+    margin: 0 !important;
+}
+
+/* 2. Hide the default arrow entirely */
+.leaflet-tooltip-pane .leaflet-tooltip-top::before,
+.leaflet-tooltip-pane .leaflet-tooltip-bottom::before,
+.leaflet-tooltip-pane .leaflet-tooltip-left::before,
+.leaflet-tooltip-pane .leaflet-tooltip-right::before {
+    border: none !important;
+
+}
+.tooltip-content-wrapper
+{
+  margin-bottom: 10px;
+}
+/* 3. Remove default padding and shadow from the outer wrapper */
 .leaflet-tooltip {
-  margin-bottom: 65px;
+    box-shadow: none !important;
+
+    border-radius: 8px;
+    padding: 8px !important;
+    border: 2px solid #4F58BD; /* Border */
 }

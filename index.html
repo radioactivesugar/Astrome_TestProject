@@ -9,6 +9,8 @@
   <link rel="stylesheet" href="Stylesheets/styles.css">
     <link rel="stylesheet" href="Stylesheets/box.css">
     <link rel="stylesheet" href="Stylesheets/fresnel.css">
+    <link rel="stylesheet" href="Stylesheets/linkUI.css">
+    <link rel="stylesheet" href="Stylesheets/infoBox.css">
 </head>
 <body>
   <div id="map-container">
@@ -16,7 +18,20 @@
     <div id="map-overlay"></div>
   </div>
 
-  <div id="info">Click on the map to add points</div>
+  <body>
+      <div id="map-container">
+          <div id="map"></div>
+          <div id="map-overlay"></div>
+      </div>
+
+      <div id="info-box" class="info-box success">
+          <div id="info-header-container">
+              <span id="info-header">Welcome! Tap to place a tower.</span>
+              <img id="info-icon" src="assets/icon-success-sun.svg" alt="Info Icon">
+          </div>
+          <div id="info-body">This is a Fresnel Visualiser created for Astrome. Thank you for the oppotunity, regards Anuj.</div>
+      </div>
+  </body>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
           integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>

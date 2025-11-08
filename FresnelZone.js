@@ -145,10 +145,10 @@ function calculateScale(freq){
 
     // 6. Draw the polygon on the map
     currentFresnel = L.polygon(finalPolygonPath, {
-        color: 'blue',
-        fillColor: 'blue',
-        fillOpacity: 0.15,
-        weight: 1
+        color: '#C7743D',
+        fillColor: '#FFEC1F',
+        fillOpacity: 0.35,
+        weight: 2
     }).addTo(map);
 
     console.log(currentFresnel);

@@ -1,0 +1,71 @@
+#info-box {
+    /* Basic positioning for demo */
+    position: fixed;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    padding: 20px;
+    border-radius: 12px;
+    max-width: 350px;
+    font-family: sans-serif;
+
+
+
+}
+
+#info-header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; /* Aligns header and icon correctly */
+    margin-bottom: 10px;
+}
+
+#info-header {
+    font-weight: bold;
+    font-size: 1em; /* Larger size for header */
+}
+
+#info-icon {
+    width: 18px;  /* Set size for the image icon */
+    height: 18px;
+    margin-left: 20px;
+}
+
+#info-body {
+  padding-top: 10px;
+    font-size: 0.8em;
+    line-height: 1.4;
+}
+
+.info-box{
+
+      transition: opacity 0.2s ease-out;
+
+      opacity: 1; /* Start fully visible */
+}
+/* --- ERROR (RED) STYLES --- */
+.info-box.error {
+    background-color: #ffffff;
+    border: 3px solid #db3647; /* Red Border */
+    box-shadow: 0 5px 15px rgba(219, 54, 71, 0.2);
+}
+.info-box.error #info-header {
+    color: #db3647; /* Red Header Text */
+}
+/* The icon will change via the JS function's src attribute */
+.info-box.faded {
+    /* The final state after 10 seconds */
+    opacity: 0; /* Fades to 50% transparency */
+}
+
+/* --- SUCCESS (BLUE) STYLES --- */
+.info-box.success {
+    background-color: #ffffff;
+    border: 3px solid #4a4aae; /* Blue/Purple Border */
+    box-shadow: 0 5px 15px rgba(74, 74, 174, 0.2);
+}
+.info-box.success #info-header {
+    color: #4a4aae; /* Blue/Purple Header Text */
+}
+/* The icon will change via the JS function's src attribute */

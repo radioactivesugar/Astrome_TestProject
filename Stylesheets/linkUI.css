@@ -1,0 +1,171 @@
+/* Main card container (This is the class you'll use to replace Leaflet's wrapper) */
+/* Main card container */
+.link-card-wrapper{
+    /* ... existing styles ... */
+
+    /* --- NEW POSITIONING FOR TOP-RIGHT ANCHORING --- */
+
+    position: absolute;     /* 20px offset from the right edge */
+
+    /* Ensure it appears above map elements, etc. */
+    z-index: 1000;
+
+    /* ... rest of the existing styles ... */
+    background: white;
+    border: 2px solid #5b6fd8;
+    border-radius: 5px;
+    padding: 0px;
+    width: 300px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+    font-family: 'Open Sans', sans-serif;
+}
+
+        /* Content margin (Inner wrapper for padding) */
+        .link-card-content
+        {
+            margin: 10px 10px;
+        }
+
+        /* Header Section */
+        .link-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        /* Title */
+        .link-card-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: #000;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        /* ID */
+        .link-card-id {
+            color: #666;
+            font-weight: 400;
+        }
+
+        /* Close Button */
+        .link-card-close-btn {
+            background: #5b6fd8;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 17px;
+            height: 17px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 11px;
+            flex-shrink: 0;
+        }
+
+        .link-card-close-btn:hover {
+            background: #4a5dc7;
+        }
+
+        /* --- LINK CARD UNIQUE LAYOUTS --- */
+
+        /* Main Data Layout (Frequency and Distance) */
+        .link-card-main-data {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        /* Large value boxes (52.9 GHz, 1321m) */
+        .link-card-main-data-field {
+            background: #F2F3F6;
+            border-radius: 2px;
+            padding: 5px 10px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #000;
+            margin-top: 3px;
+        }
+
+        /* Label for Frequency/Distance */
+        .link-card-data-label-main {
+            color: #000;
+            font-size: 11px;
+            font-weight: 400;
+            display: block;
+        }
+
+        /* Tower Headers */
+        .link-card-tower-headers {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+            margin-bottom: 10px;
+        }
+
+        /* Title within headers */
+        .link-card-tower-headers .link-card-title {
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* Tower Data Grid (The 4-column layout for elevation, latitude, longitude) */
+        .link-card-tower-grid {
+            display: grid;
+            grid-template-columns: auto 1fr auto 1fr;
+            gap: 0 10px;
+            margin-top: 5px;
+        }
+
+        /* Tight vertical spacing for rows */
+        .link-card-tower-grid .link-card-data-label,
+        .link-card-tower-grid .link-card-data-value {
+            padding: 2px 0;
+        }
+
+        /* Alignment utilities */
+        .link-card-align-right {
+            text-align: right;
+        }
+
+        /* --- TYPOGRAPHY AND GENERAL DATA STYLES (Standardized) --- */
+
+        /* Data Field */
+        .link-card-data-field {
+            padding: 0;
+        }
+
+        /* Tower/Link data labels (e.g., "elevation", "latitude") */
+        .link-card-data-label {
+            font-size: 8px;
+            color: #999;
+            white-space: nowrap;
+        }
+
+        /* Tower/Link data values (e.g., "912m", "13.171") */
+        .link-card-data-value {
+            font-size: 10px;
+            font-weight: 600;
+            text-align: right;
+        }
+
+        /* Action Button Container */
+        .link-card-action-buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            margin-left: auto;;
+            width: 80px;
+        }
+
+        /* Delete Button Style */
+        .link-card-btn-delete {
+
+        }
+
+        .link-card-btn-delete:hover {
+            background: #ffc4c4;
+        }
