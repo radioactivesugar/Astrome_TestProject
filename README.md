@@ -21,7 +21,7 @@ Fresnel zones are ellipsoidal regions of space around the direct line-of-sight p
 
 ## 🚀 Demo
 
-[Live Demo](#) *(Add your demo link here)*
+[[Live Demo]](https://astrome-test-project-9wm9.vercel.app/)
 
 ## 🛠️ Technologies Used
 
@@ -59,9 +59,6 @@ L.tileLayer("https://api.maptiler.com/maps/aquarelle/256/{z}/{x}/{y}.png?key=YOU
 5. **Analyze**: Review distance, elevation changes, and frequency data
 6. **Modify**: Delete towers or links as needed
 
-## 🎨 Screenshots
-
-*(Add screenshots of your tool here)*
 
 ## 🧮 Technical Details
 
